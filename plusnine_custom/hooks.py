@@ -7,7 +7,7 @@ app_license = "mit"
 
 # Apps
 # ------------------
-
+# stunted apps will not be installed until all their dependencies are installed
 # required_apps = []
 
 # Each item in the list will be shown as an app in the apps page
