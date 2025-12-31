@@ -1,0 +1,32 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.lead_type==\"End User\" and doc.lead_brand==\"STEK\"",
+ "creation": "2025-06-12 17:06:55.012621",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Sales Partner Assigned Lead",
+ "enabled": 1,
+ "event": "Save",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<p>{% set salesPartnerName = frappe.get_doc(\"Sales Partner\", doc.custom_sales_partner_customer) %}</p>\n\n<p>Dear {{salesPartnerName.name}},</p>  \n\n<p>We\u2019ve assigned you a new lead who has expressed interest in getting STEK PPF installed on their vehicle. Please find the lead details below:</p>\n\n<p>Client Name: {{doc.first_name}}</p>\n\n<p>Contact Info: {{doc.mobile_no}} / {{doc.email_id}}</p>\n\n<p>Vehicle Details: {{doc.custom_vehicle_no}} {{doc.custom_vehicle_no}}</p>\n\n<p>Location: {{doc.city}} {{doc.territory}}</p>\n\n<p>Kindly reach out to the client as soon as possible and keep us updated on the progress.</p>\n\n<p>Best regards,\nSTEK Team</p> \n",
+ "message_type": "Markdown",
+ "modified": "2025-07-28 15:06:29.664330",
+ "modified_by": "Administrator",
+ "module": "Plus Nine Custom",
+ "name": "Sales Partner Lead Assigned",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "custom_customer_email_id"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "sender": "Plus Nine One Inc",
+ "sender_email": "noreply@plus91inc.in",
+ "set_property_after_alert": "",
+ "subject": "New Lead Assigned \u2013 STEK PPF Inquiry"
+}

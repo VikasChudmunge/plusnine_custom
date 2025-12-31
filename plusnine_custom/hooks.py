@@ -31,7 +31,7 @@ app_license = "mit"
 # include js, css files in header of web template
 # web_include_css = "/assets/plusnine_custom/css/plusnine_custom.css"
 # web_include_js = "/assets/plusnine_custom/js/plusnine_custom.js"
-
+# app_include_css = "/assets/plusnine_custom/css/custom_login.css"
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "plusnine_custom/public/scss/website"
 
@@ -41,6 +41,20 @@ app_license = "mit"
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
+
+doctype_js = {"Lead":"public/js/custom_lead.js",
+                "Prospect":"public/js/custom_prospect.js",
+                "Opportunity":"public/js/custom_opportunity.js",
+                "Customer":"public/js/custom_customer.js",
+                "Delivery Note":"public/js/custom_delivery.js",
+                "Sales Order":"public/js/custom_salesorder.js",
+                "Sales Invoice":"public/js/custom_salesinvoice.js",
+                "Quotation":"public/js/custom_quotation.js",
+                "Job Card":"public/js/custom_jobcard.js",
+                # "Sales Order":"public/js/sales_order.js",
+                # "Prospect": "public/js/prospect.js",
+            }
+after_migrate = ["plusnine_custom.custom_pyfile.custom_python.patch_make_packing_list"]
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
@@ -72,12 +86,18 @@ app_license = "mit"
 
 # Jinja
 # ----------
-
 # add methods and filters to jinja environment
 # jinja = {
 # 	"methods": "plusnine_custom.utils.jinja_methods",
 # 	"filters": "plusnine_custom.utils.jinja_filters"
 # }
+jinja = {
+    "methods" : [
+      "plusnine_custom.plus_nine_custom.utils.sales_order_print.get_invoice_item_and_tax_details",
+      "plusnine_custom.plus_nine_custom.utils.sales_invoice_print.get_inv_item_and_tax_details",
+      "frappe.utils.data.money_in_words"
+    ]
+}
 
 # Installation
 # ------------
@@ -136,7 +156,49 @@ app_license = "mit"
 # Document Events
 # ---------------
 # Hook on document methods and events
+doc_events = {
+    "Prospect": {
+        "before_save": "plusnine_custom.custom_pyfile.custom_python.before_save",
+        "on_trash": "plusnine_custom.custom_pyfile.custom_python.on_trash"
+    },
+     "Customer": { 
+        "before_save": "plusnine_custom.custom_pyfile.custom_python.cust_set_status",
+        "on_trash": "plusnine_custom.custom_pyfile.custom_python.cust_del_set_status"
+    },
+    "Sales Invoice": {
+        "on_submit": "plusnine_custom.custom_pyfile.custom_python.salesinvocie_after_save",
+        "on_submit": "plusnine_custom.public.py.sales_invoice.send_invoice_email",
+        # "on_submit": "plusnine_custom.public.py.sales_invoice.create_and_attach_pdf",
+        # "on_update_after_submit": "plusnine_custom.public.py.sales_invoice.create_and_attach_pdf"
 
+    },
+    "Delivery Note": {  
+        "on_submit": "plusnine_custom.custom_pyfile.custom_python.delivery_note_submit",
+    }, 
+    "Lead": {
+        "after_insert": "plusnine_custom.public.py.custom_lead.assign_sales_partner",
+        "on_update": "plusnine_custom.public.py.custom_lead.assign_sales_partner"
+    },
+    "Sales Partner Assigned Lead": {
+        "after_insert": "plusnine_custom.public.py.custom_sales_partner_assign_lead.create_opportunity"
+    },
+    "Opportunity":{
+        "before_save": "plusnine_custom.public.py.opportunity.set_quotation_lost" 
+        # "after_save": "plusnine_custom.public.py.opportunity.set_quotation_lost" 
+    },
+    "ToDo": {
+        "after_insert": "plusnine_custom.public.py.todo_webhook.update_due_checkbox",
+        "on_update": "plusnine_custom.public.py.todo_webhook.update_due_checkbox"
+    },
+     "Event": {
+        "before_insert": "plusnine_custom.public.py.event.set_event_public"
+    }
+   
+    # "Sales Order": {
+    #       "on_submit": "plusnine_custom.public.py.sales_order.create_and_attach_pdf"
+    #   #   "on_submit": "plusnine_custom.public.py.sales_order.create_job_cards",
+    # },
+}
 # doc_events = {
 # 	"*": {
 # 		"on_update": "method",
@@ -148,23 +210,36 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"plusnine_custom.tasks.all"
 # 	],
 # 	"daily": [
 # 		"plusnine_custom.tasks.daily"
 # 	],
-# 	"hourly": [
-# 		"plusnine_custom.tasks.hourly"
-# 	],
+	"hourly": [
+		"plusnine_custom.plus_nine_custom.doctype.plan_visit.plan_visit.recurring_plan"
+	],
+    "daily": [
+        "plusnine_custom.public.py.notification.send_todo_summary",
+        "plusnine_custom.public.py.notification.send_due_date_reminder",
+        "plusnine_custom.public.py.notification.send_overdue_todos",
+        "plusnine_custom.public.py.todo_webhook.check_due_todos",
+    ],
+    "cron": { 
+        "59 23 * * *": [
+            "plusnine_custom.public.py.notification.send_camping_wise_lead_report_html",
+            "plusnine_custom.public.py.notification.brand_costcenter_sales_mail"
+        ]
+    }
+
 # 	"weekly": [
 # 		"plusnine_custom.tasks.weekly"
 # 	],
 # 	"monthly": [
 # 		"plusnine_custom.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------
@@ -193,6 +268,7 @@ app_license = "mit"
 # -----------------------------------------------------------
 
 # ignore_links_on_delete = ["Communication", "ToDo"]
+ignore_links_on_delete = ["Job Cards"]
 
 # Request Events
 # ----------------
