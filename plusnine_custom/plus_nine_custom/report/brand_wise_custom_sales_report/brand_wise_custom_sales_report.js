@@ -15,7 +15,7 @@ frappe.query_reports["Brand Wise Custom Sales Report"] = {
             label: "Brand",
             fieldtype: "Link",
             options: "Brand",
-            depends_on: "eval:doc.group_by == 'Brand'"
+            depends_on: "eval:doc.group_by == 'Brand'" 
         },
         {  
             fieldname: "cost_center",
