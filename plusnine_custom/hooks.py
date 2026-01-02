@@ -149,9 +149,9 @@ jinja = {
 # ---------------
 # Override standard doctype classes
 
-override_doctype_class = {
-	"Payment Entry": "plusnine_custom.overrides.payment_entry.CustomPaymentEntry"
-}
+# override_doctype_class = {
+# 	"Payment Entry": "plusnine_custom.overrides.payment_entry.CustomPaymentEntry"
+# }
 # Document Events
 # ---------------
 # Hook on document methods and events
