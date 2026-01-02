@@ -102,6 +102,12 @@ def custom_make_packing_list(doc,method=None):
 
 @frappe.whitelist()
 def before_save(self, action):
+    if not self.custom_phone:
+        for lead_row in self.leads:
+            mobile_no = frappe.get_value("Lead", lead_row.lead, "mobile_no")
+            if mobile_no:
+                self.custom_phone = mobile_no
+                break
     for i in self.leads:
         frappe.set_value("Lead",i.lead, "status", "Prospect")
 @frappe.whitelist()
@@ -113,6 +119,15 @@ def on_trash(self, action):
 def cust_set_status(self, action):
     if self.prospect_name:
         prospect_cust = frappe.get_doc("Prospect", self.prospect_name)
+        if not self.mobile_no:
+            if prospect_cust.custom_phone:
+                self.mobile_no = prospect_cust.custom_phone
+            else:
+                for lead_row in prospect_cust.leads:
+                    mobile_no = frappe.get_value("Lead", lead_row.lead, "mobile_no")
+                    if mobile_no:
+                        self.mobile_no = mobile_no
+                        break
         for lead_row in prospect_cust.leads:
             frappe.set_value("Lead",lead_row.lead, "status", "Converted")
 @frappe.whitelist()

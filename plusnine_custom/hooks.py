@@ -149,14 +149,16 @@ jinja = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
-
+override_doctype_class = {
+	"Payment Entry": "plusnine_custom.overrides.payment_entry.CustomPaymentEntry"
+}
 # Document Events
 # ---------------
 # Hook on document methods and events
 doc_events = {
+    "Payment Entry": {
+        "before_validate": "plusnine_custom.overrides.payment_entry.disable_duplicate_validation"
+    },
     "Prospect": {
         "before_save": "plusnine_custom.custom_pyfile.custom_python.before_save",
         "on_trash": "plusnine_custom.custom_pyfile.custom_python.on_trash"
@@ -317,4 +319,3 @@ ignore_links_on_delete = ["Job Cards"]
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
