@@ -26,4 +26,4 @@ frappe.query_reports["Brand Wise Custom Sales Report"] = {
         }
     ]
 };
- 
+  

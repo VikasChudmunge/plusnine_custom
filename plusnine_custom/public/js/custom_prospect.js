@@ -135,7 +135,7 @@ frappe.ui.form.on('Prospect', {
                         frm.page.remove_inner_button("Create Customer", "Create");
                     }
                 }
-            });
+            });  
         }
 
         // -------- Hide Create Customer button if Customer already exists --------
@@ -153,8 +153,28 @@ frappe.ui.form.on('Prospect', {
                         frappe.set_route('Form', 'Customer', r.message);
                     });
                 }
-            }
+            } 
         });
+
+        // -------- Hide Create Opportunity button if Opportunity already exists --------
+        // frappe.call({
+        //     method: "plusnine_custom.public.py.prospect.check_opportunity_exists", 
+        //     args: { prospect_name: frm.doc.name },
+        //     callback: function(r) {
+        //         if (r.message) {
+        //             // Opportunity exists → hide Create button 
+        //             console.log(r.message)
+        //             frm.page.remove_inner_button("Opportunity", "Create");
+
+        //             // Optional: add "View Customer" button
+        //             frm.add_custom_button(__('View Customer'), function () {
+        //                 frappe.set_route('Form', 'Opportunity', r.message);
+        //             });
+        //         }
+        //     } 
+        // });
+
+
 
 
             frm.add_custom_button(__("Add Comment"), function() {

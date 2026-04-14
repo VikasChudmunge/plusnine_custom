@@ -16,7 +16,7 @@ frappe.ui.form.on('Sales Order', {
                             category: category
                         },
                         callback: function(response) {
-                            item_list = response.message;
+                            item_list = response.message; 
                             console.log(item_list);
                         }
                     });
@@ -180,4 +180,36 @@ frappe.ui.form.on('Sales Order Item', {
     }
 });
 
+frappe.ui.form.on('Custom Bundle Item', {
+    item_code(frm, cdt, cdn) {
+        set_custom_bundle_batch_query(frm, cdt, cdn);
+    },
+    warehouse(frm, cdt, cdn) {
+        set_custom_bundle_batch_query(frm, cdt, cdn);
+    }
+});
+
+function set_custom_bundle_batch_query(frm, cdt, cdn) {
+    const row = locals[cdt][cdn] || {};
+    const warehouse = row.warehouse || frm.doc.set_warehouse;
+    const item_code = row.item_code;
+
+    frm.fields_dict.custom_items_bundle.grid.get_field('batch').get_query = function (doc, cdt, cdn) {
+        const d = locals[cdt][cdn] || {};
+        const wh = d.warehouse || frm.doc.set_warehouse;
+        const item = d.item_code;
+
+        if (!item) {
+            return {};
+        }
+
+        return { 
+            query: "erpnext.controllers.queries.get_batch_no",
+            filters: {
+                item_code: item,
+                warehouse: wh
+            }
+        };
+    };
+}
 

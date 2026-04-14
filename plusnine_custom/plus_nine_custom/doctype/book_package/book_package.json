@@ -11,9 +11,16 @@
   "customer",
   "column_break_ojvl",
   "vehicle_no",
+  "section_break_hogu",
+  "valid_till",
+  "column_break_spie",
+  "status",
   "section_break_koqd",
   "book_package_item",
-  "si_id"
+  "si_id",
+  "mobile_number",
+  "car_brand",
+  "car_model"
  ],
  "fields": [
   {
@@ -62,11 +69,53 @@
    "fieldtype": "Float",
    "label": "Package Amount",
    "precision": "2"
+  },
+  {
+   "fetch_from": "customer.mobile_no",
+   "fieldname": "mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile Number",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vehicle_no.brand",
+   "fieldname": "car_brand",
+   "fieldtype": "Data",
+   "label": "Car Brand",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "vehicle_no.model",
+   "fieldname": "car_model",
+   "fieldtype": "Data",
+   "label": "Car Model",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_hogu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "valid_till",
+   "fieldtype": "Date",
+   "label": "Valid Till",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_spie",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nExpire",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-03 14:33:10.775459",
+ "modified": "2026-01-09 18:22:11.383913",
  "modified_by": "Administrator",
  "module": "Plus Nine Custom",
  "name": "Book Package",

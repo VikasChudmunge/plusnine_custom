@@ -83,7 +83,7 @@ frappe.ui.form.on('Sales Invoice', {
                         }
                     }
                 })
-            })
+            }) 
         }
     },
     customer: function (frm) {

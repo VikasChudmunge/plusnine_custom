@@ -8,11 +8,6 @@ def set_quotation_lost(doc,method):
         frappe.set_value("Lead", doc.party_name, "status", "Not Intrested")
 
 
-
-
-
-import frappe
-
 @frappe.whitelist()
 def create_event_with_todos_opportunity(data):
 
@@ -105,4 +100,12 @@ def add_comments(comment,name, email=None):
     comment_doc.comment_type = "Comment"
     comment_doc.content = comment
     comment_doc.save()
-    return "Success"
+    return "Success" 
+
+
+@frappe.whitelist()
+def set_prospect_company_name(doc, method=None):
+    if doc.opportunity_from == "Prospect" and doc.party_name:
+        name, company_name = frappe.get_value("Prospect", {"name": doc.party_name}, ["name", "company_name"])
+        doc.customer_name = company_name
+        doc.title = company_name 

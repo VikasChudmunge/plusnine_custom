@@ -1,0 +1,151 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"LbnLs_b06j\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales Manager</span>\",\"col\":12}},{\"id\":\"69lUf2RTo_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lead\",\"col\":3}},{\"id\":\"fvtRcXe2U9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Prospect\",\"col\":3}},{\"id\":\"2SbEIKU9ez\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\" Opportunity\",\"col\":3}},{\"id\":\"OULkzV_8SQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"61-ZelL6Lj\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Plan Visit\",\"col\":3}},{\"id\":\"ohSubjmKKB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visits\",\"col\":3}},{\"id\":\"HHFFwznfWo\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotation\",\"col\":3}},{\"id\":\"Xu0ROY8aCD\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":3}},{\"id\":\"nnNXWNIBR0\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Todo\",\"col\":3}},{\"id\":\"ccCRhne4nQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Task\",\"col\":3}},{\"id\":\"qnainio2jQ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Expense Claim\",\"col\":3}},{\"id\":\"7P5oq8tEtY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Application\",\"col\":3}},{\"id\":\"j6R258M7QS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"geGUZNCOcE\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"4qryY7uwO0\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports</b></span>\",\"col\":12}},{\"id\":\"zAbecFIvci\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visit Report\",\"col\":3}},{\"id\":\"2Zm3FXlft_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Activity Report\",\"col\":3}},{\"id\":\"Z_E_RyoC9w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Comment list\",\"col\":3}}]",
+ "creation": "2026-02-02 14:36:23.859287",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Sales Manager",
+ "links": [],
+ "modified": "2026-02-24 16:17:12.173751",
+ "modified_by": "Administrator",
+ "module": "Plus Nine Custom",
+ "name": "Sales Manager",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "3rd Party Installer",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Sales Manager"
+  }
+ ],
+ "sequence_id": 38.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Activity Report",
+   "link_to": "Activity Report",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Comment list",
+   "link_to": "Comment",
+   "stats_filter": "[[\"Comment\",\"comment_type\",\"=\",\"Comment\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Field Visit Report",
+   "link_to": "Field Visit Report",
+   "type": "Report"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Lead",
+   "link_to": "Lead",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Prospect",
+   "link_to": "Prospect",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": " Opportunity",
+   "link_to": "Opportunity",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Customer",
+   "link_to": "Customer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Plan Visit",
+   "link_to": "Plan Visit",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Field Visits",
+   "link_to": "Field Visits",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Quotation",
+   "link_to": "Quotation",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Order",
+   "link_to": "Sales Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Todo",
+   "link_to": "ToDo",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Task",
+   "link_to": "Task",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Expense Claim",
+   "link_to": "Expense Claim",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Leave Application",
+   "link_to": "Leave Application",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Sales Manager"
+}

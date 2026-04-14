@@ -6,4 +6,4 @@ frappe.query_reports["Field Visit Report"] = {
 
 	]
 };
- 
+  

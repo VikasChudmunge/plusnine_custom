@@ -6,7 +6,7 @@
 //         if (frm.doc.package_name) {
 //             frappe.call({
 //                 method: 'frappe.client.get',
-//                 args: {
+//                 args: { 
 //                     doctype: 'Packages',
 //                     name: frm.doc.package_name
 //                 },

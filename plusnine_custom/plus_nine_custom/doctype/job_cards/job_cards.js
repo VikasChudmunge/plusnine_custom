@@ -18,7 +18,7 @@ frappe.ui.form.on("Job Cards", {
                 await frm.save();
                 await frm.reload_doc()
             }).addClass('btn-primary');
-        }
+        } 
         
         // if (!frm.doc.status) {
         //     frm.add_custom_button(__('Acknowledge'), async function() {

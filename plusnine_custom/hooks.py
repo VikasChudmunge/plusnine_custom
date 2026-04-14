@@ -51,6 +51,7 @@ doctype_js = {"Lead":"public/js/custom_lead.js",
                 "Sales Invoice":"public/js/custom_salesinvoice.js",
                 "Quotation":"public/js/custom_quotation.js",
                 "Job Card":"public/js/custom_jobcard.js",
+                "Delivery Note":"public/js/delivery_note.js",
                 # "Sales Order":"public/js/sales_order.js",
                 # "Prospect": "public/js/prospect.js",
             }
@@ -156,9 +157,6 @@ jinja = {
 # ---------------
 # Hook on document methods and events
 doc_events = {
-    "Payment Entry": {
-        "before_validate": "plusnine_custom.overrides.payment_entry.disable_duplicate_validation"
-    },
     "Prospect": {
         "before_save": "plusnine_custom.custom_pyfile.custom_python.before_save",
         "on_trash": "plusnine_custom.custom_pyfile.custom_python.on_trash"
@@ -167,12 +165,25 @@ doc_events = {
         "before_save": "plusnine_custom.custom_pyfile.custom_python.cust_set_status",
         "on_trash": "plusnine_custom.custom_pyfile.custom_python.cust_del_set_status"
     },
+    # "Sales Invoice": {
+    #     "on_submit": [
+    #         "plusnine_custom.custom_pyfile.custom_python.salesinvocie_after_save",
+    #         "plusnine_custom.public.py.sales_invoice.send_invoice_email",
+    #     ]
+    # },
     "Sales Invoice": {
-        "on_submit": "plusnine_custom.custom_pyfile.custom_python.salesinvocie_after_save",
-        "on_submit": "plusnine_custom.public.py.sales_invoice.send_invoice_email",
-        # "on_submit": "plusnine_custom.public.py.sales_invoice.create_and_attach_pdf",
-        # "on_update_after_submit": "plusnine_custom.public.py.sales_invoice.create_and_attach_pdf"
-
+        "on_submit":[
+            "plusnine_custom.public.py.sales_invoice.create_and_attach_pdf",
+            "plusnine_custom.public.py.sales_invoice.send_invoice_email",
+        ],
+        "on_update_after_submit": "plusnine_custom.public.py.sales_invoice.create_and_attach_pdf",
+    },
+    "Quotation": {
+        "on_submit":[
+            "plusnine_custom.public.py.quotation.create_and_attach_pdf",
+            "plusnine_custom.public.py.quotation.send_invoice_email",
+        ], 
+        "on_update_after_submit": "plusnine_custom.public.py.quotation.create_and_attach_pdf",
     },
     "Delivery Note": {  
         "on_submit": "plusnine_custom.custom_pyfile.custom_python.delivery_note_submit",
@@ -185,8 +196,11 @@ doc_events = {
         "after_insert": "plusnine_custom.public.py.custom_sales_partner_assign_lead.create_opportunity"
     },
     "Opportunity":{
-        "before_save": "plusnine_custom.public.py.opportunity.set_quotation_lost" 
-        # "after_save": "plusnine_custom.public.py.opportunity.set_quotation_lost" 
+        "before_save":[
+            "plusnine_custom.public.py.opportunity.set_quotation_lost",
+            "plusnine_custom.public.py.opportunity.set_prospect_company_name"
+            # "after_save": "plusnine_custom.public.py.opportunity.set_quotation_lost" 
+        ] 
     },
     "ToDo": {
         "after_insert": "plusnine_custom.public.py.todo_webhook.update_due_checkbox",

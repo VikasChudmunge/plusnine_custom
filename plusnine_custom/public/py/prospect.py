@@ -21,6 +21,13 @@ def check_customer_exists(prospect_name):
     return customer or ""
 
 
+# @frappe.whitelist()
+# def check_opportunity_exists(prospect_name): 
+#     """Check if an Opportunity already exists for this Prospect"""
+#     opportunity = frappe.db.get_value("Opportunity", {"party_name": prospect_name}, "name")
+#     return opportunity or ""
+
+
 
 
 

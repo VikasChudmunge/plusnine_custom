@@ -212,6 +212,22 @@ frappe.ui.form.on('Customer', {
             dialog.show();
         });
 
+    
+    // Create a Opportunity button 
+        if(!frm.is_new()){
+            frm.add_custom_button(__('Create Opportunity'), async function () {
+                frappe.model.with_doctype('Opportunity', async () => {
+                    
+                    let opportunity_doc = frappe.model.get_new_doc('Opportunity');
+
+                    opportunity_doc.opportunity_from = "Customer";
+                    opportunity_doc._customer = frm.doc.name;
+                    
+                    
+                    frappe.set_route('Form', 'Opportunity', opportunity_doc.name);
+                }) 
+            })
+        }
 
 
     }

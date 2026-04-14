@@ -7,7 +7,10 @@ frappe.ui.form.on('Opportunity', {
     //         cur_frm.page.remove_inner_button(__('Request For Quotation'),  __('Create'));
     //         cur_frm.page.remove_inner_button(__('Close'));
     //    }, 500);
-
+        if(frm.doc._customer){
+            frm.doc.party_name = frm.doc._customer
+            frm.refresh_field('party_name')
+        }
            frm.add_custom_button(__("Add Comment"), function() {
             if(!frm.is_new()){  
                 let d = new frappe.ui.Dialog({

@@ -19,7 +19,7 @@ def get_columns():
             "label": "Pending",
             "fieldname": "pending_count",
             "fieldtype": "Int",
-            "width": 120
+            "width": 120 
         },
         {
             "label": "Completed",

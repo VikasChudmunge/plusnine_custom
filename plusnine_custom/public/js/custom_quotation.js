@@ -16,7 +16,7 @@ frappe.ui.form.on('Quotation', {
                             category: category
                         },
                         callback: function(response) {
-                            item_list = response.message;
+                            item_list = response.message; 
                             console.log(item_list);
                         }
                     });

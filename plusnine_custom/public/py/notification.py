@@ -501,22 +501,147 @@ def send_camping_wise_lead_report_html():
 
 
 # =====================================Send Brand and Cost Center Wise Sales Report=====================================================
+# import frappe
+# from frappe.utils import today, getdate, get_first_day
+
+
+# def brand_costcenter_sales_mail():
+#     brand_data = get_report_data(group_by="Brand")
+#     cost_center_data = get_report_data(group_by="Cost Center")
+
+#     brand_table = make_html_table(
+#         brand_data,
+#         title="Brand Wise Sales Report"
+#     )
+
+#     cost_center_table = make_html_table(
+#         cost_center_data,
+#         title="Cost Center Wise Sales Report"
+#     )
+
+#     email_body = f"""
+#         <h3>Daily Sales Summary</h3>
+#         {brand_table}
+#         <br><br>
+#         {cost_center_table}
+#     """
+
+#     frappe.sendmail(
+#         recipients=["justsignssocial@gmail.com", "hpalrecha@gmail.com"],
+#         subject="Daily Brand & Cost Center Wise Sales Report",
+#         message=email_body
+#     )
+
+
+# def get_report_data(group_by):
+#     today_date = getdate(today())
+#     month_start = get_first_day(today_date)
+#     year_start = getdate(f"{today_date.year}-01-01")
+
+#     if group_by == "Cost Center":
+#         group_field = "so.cost_center"
+#     else:
+#         group_field = "i.brand"
+
+#     query = f"""
+#         SELECT
+#             {group_field} AS group_value,
+
+#             SUM(
+#                 CASE 
+#                     WHEN so.transaction_date = %(today)s
+#                     THEN soi.base_net_amount
+#                     ELSE 0
+#                 END
+#             ) AS today_sales,
+
+#             SUM(
+#                 CASE
+#                     WHEN so.transaction_date BETWEEN %(month_start)s AND %(today)s
+#                     THEN soi.base_net_amount
+#                     ELSE 0
+#                 END
+#             ) AS month_sales,
+
+#             SUM(
+#                 CASE
+#                     WHEN so.transaction_date BETWEEN %(year_start)s AND %(today)s
+#                     THEN soi.base_net_amount
+#                     ELSE 0
+#                 END
+#             ) AS ytd_sales
+
+#         FROM `tabSales Order` so
+#         INNER JOIN `tabSales Order Item` soi ON soi.parent = so.name
+#         INNER JOIN `tabItem` i ON i.name = soi.item_code
+
+#         WHERE so.docstatus = 1
+
+#         GROUP BY {group_field}
+#         ORDER BY ytd_sales DESC
+#     """
+
+#     return frappe.db.sql(
+#         query,
+#         {
+#             "today": today_date,
+#             "month_start": month_start,
+#             "year_start": year_start
+#         },
+#         as_dict=True
+#     )
+
+
+# def make_html_table(data, title):
+#     if not data:
+#         return f"<h4>{title}</h4><p>No data found</p>"
+
+#     rows = ""
+#     for row in data:
+#         rows += f"""
+#             <tr>
+#                 <td>{row.group_value or '-'}</td>
+#                 <td>{row.today_sales or 0}</td>
+#                 <td>{row.month_sales or 0}</td>
+#                 <td>{row.ytd_sales or 0}</td>
+#             </tr>
+#         """
+
+#     return f"""
+#         <h4>{title}</h4>
+#         <table border="1" cellpadding="6" cellspacing="0" width="100%">
+#             <tr>
+#                 <th>Name</th>
+#                 <th>Today's Sales</th>
+#                 <th>Current Month Sales</th>
+#                 <th>YTD Sales</th>
+#             </tr>
+#             {rows}
+#         </table>
+#     """
+
+
 import frappe
 from frappe.utils import today, getdate, get_first_day
 
 
+# =========================================================
+# MAIN MAIL FUNCTION
+# =========================================================
 def brand_costcenter_sales_mail():
     brand_data = get_report_data(group_by="Brand")
     cost_center_data = get_report_data(group_by="Cost Center")
 
     brand_table = make_html_table(
         brand_data,
-        title="Brand Wise Sales Report"
+        title="Brand Wise Sales Report",
+        group_by="Brand"
     )
 
     cost_center_table = make_html_table(
         cost_center_data,
-        title="Cost Center Wise Sales Report"
+        title="Cost Center Wise Sales Report",
+        group_by="Cost Center"
     )
 
     email_body = f"""
@@ -527,12 +652,18 @@ def brand_costcenter_sales_mail():
     """
 
     frappe.sendmail(
-        recipients=["justsignssocial@gmail.com", "hpalrecha@gmail.com"],
+        recipients=[
+            "justsignssocial@gmail.com",
+            "hpalrecha@gmail.com"
+        ],
         subject="Daily Brand & Cost Center Wise Sales Report",
         message=email_body
     )
 
 
+# =========================================================
+# DATA FETCHING (MATCHES SCRIPT REPORT)
+# =========================================================
 def get_report_data(group_by):
     today_date = getdate(today())
     month_start = get_first_day(today_date)
@@ -540,35 +671,28 @@ def get_report_data(group_by):
 
     if group_by == "Cost Center":
         group_field = "so.cost_center"
+        group_condition = ""
     else:
         group_field = "i.brand"
+        group_condition = "AND i.brand != %(excluded_brand)s"
 
     query = f"""
         SELECT
             {group_field} AS group_value,
 
             SUM(
-                CASE 
-                    WHEN so.transaction_date = %(today)s
-                    THEN soi.base_net_amount
-                    ELSE 0
-                END
+                CASE WHEN so.transaction_date = %(today)s
+                THEN soi.base_net_amount ELSE 0 END
             ) AS today_sales,
 
             SUM(
-                CASE
-                    WHEN so.transaction_date BETWEEN %(month_start)s AND %(today)s
-                    THEN soi.base_net_amount
-                    ELSE 0
-                END
+                CASE WHEN so.transaction_date BETWEEN %(month_start)s AND %(today)s
+                THEN soi.base_net_amount ELSE 0 END
             ) AS month_sales,
 
             SUM(
-                CASE
-                    WHEN so.transaction_date BETWEEN %(year_start)s AND %(today)s
-                    THEN soi.base_net_amount
-                    ELSE 0
-                END
+                CASE WHEN so.transaction_date BETWEEN %(year_start)s AND %(today)s
+                THEN soi.base_net_amount ELSE 0 END
             ) AS ytd_sales
 
         FROM `tabSales Order` so
@@ -576,47 +700,129 @@ def get_report_data(group_by):
         INNER JOIN `tabItem` i ON i.name = soi.item_code
 
         WHERE so.docstatus = 1
+        {group_condition}
 
         GROUP BY {group_field}
         ORDER BY ytd_sales DESC
     """
 
-    return frappe.db.sql(
+    rows = frappe.db.sql(
         query,
         {
             "today": today_date,
             "month_start": month_start,
-            "year_start": year_start
+            "year_start": year_start,
+            "excluded_brand": "P91 CC"
         },
         as_dict=True
     )
 
+    # ------------------------------------------------
+    # EXTRA LOGIC FOR COST CENTER
+    # ------------------------------------------------
+    if group_by != "Cost Center":
+        return rows
 
-def make_html_table(data, title):
+    p91_label = "P91 Car care - P91"
+
+    p91_row = next((r for r in rows if r.get("group_value") == p91_label), None)
+    others_rows = [r for r in rows if r.get("group_value") != p91_label]
+
+    others_today = sum(r.get("today_sales", 0) for r in others_rows)
+    others_month = sum(r.get("month_sales", 0) for r in others_rows)
+    others_ytd = sum(r.get("ytd_sales", 0) for r in others_rows)
+
+    p91_today = (p91_row or {}).get("today_sales", 0)
+    p91_month = (p91_row or {}).get("month_sales", 0)
+    p91_ytd = (p91_row or {}).get("ytd_sales", 0)
+
+    return [{
+        "group_value": p91_label,
+        "today_sales": p91_today,
+        "month_sales": p91_month,
+        "ytd_sales": p91_ytd,
+        "others_today": others_today,
+        "others_month": others_month,
+        "others_ytd": others_ytd,
+        "p91_minus_others_today": p91_today - others_today,
+        "p91_minus_others_month": p91_month - others_month,
+        "p91_minus_others_ytd": p91_ytd - others_ytd,
+    }]
+
+
+# =========================================================
+# HTML TABLE BUILDER
+# =========================================================
+def make_html_table(data, title, group_by):
     if not data:
         return f"<h4>{title}</h4><p>No data found</p>"
 
-    rows = ""
-    for row in data:
-        rows += f"""
+    # ---------------------------
+    # COST CENTER TABLE
+    # ---------------------------
+    if group_by == "Cost Center":
+        header = """
             <tr>
-                <td>{row.group_value or '-'}</td>
-                <td>{row.today_sales or 0}</td>
-                <td>{row.month_sales or 0}</td>
-                <td>{row.ytd_sales or 0}</td>
+                <th>Cost Center</th>
+                <th>Today</th>
+                <th>Month</th>
+                <th>YTD</th>
+                <th>Others Today</th>
+                <th>Others Month</th>
+                <th>Others YTD</th>
+                <th>P91 - Others Today</th>
+                <th>P91 - Others Month</th>
+                <th>P91 - Others YTD</th>
             </tr>
         """
+
+        rows_html = ""
+        for r in data:
+            rows_html += f"""
+                <tr>
+                    <td>{r.get("group_value")}</td>
+                    <td>{r.get("today_sales", 0)}</td>
+                    <td>{r.get("month_sales", 0)}</td>
+                    <td>{r.get("ytd_sales", 0)}</td>
+                    <td>{r.get("others_today", 0)}</td>
+                    <td>{r.get("others_month", 0)}</td>
+                    <td>{r.get("others_ytd", 0)}</td>
+                    <td>{r.get("p91_minus_others_today", 0)}</td>
+                    <td>{r.get("p91_minus_others_month", 0)}</td>
+                    <td>{r.get("p91_minus_others_ytd", 0)}</td>
+                </tr>
+            """
+
+    # ---------------------------
+    # BRAND TABLE
+    # ---------------------------
+    else:
+        header = """
+            <tr>
+                <th>Brand</th>
+                <th>Today</th>
+                <th>Month</th>
+                <th>YTD</th>
+            </tr>
+        """
+
+        rows_html = ""
+        for r in data:
+            rows_html += f"""
+                <tr>
+                    <td>{r.get("group_value")}</td>
+                    <td>{r.get("today_sales", 0)}</td>
+                    <td>{r.get("month_sales", 0)}</td>
+                    <td>{r.get("ytd_sales", 0)}</td>
+                </tr>
+            """
 
     return f"""
         <h4>{title}</h4>
         <table border="1" cellpadding="6" cellspacing="0" width="100%">
-            <tr>
-                <th>Name</th>
-                <th>Today's Sales</th>
-                <th>Current Month Sales</th>
-                <th>YTD Sales</th>
-            </tr>
-            {rows}
+            {header}
+            {rows_html}
         </table>
     """
+
 # ===================================== End ====================================================

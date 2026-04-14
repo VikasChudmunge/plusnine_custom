@@ -3,59 +3,106 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import get_datetime, now_datetime
 from frappe.utils.nestedset import get_descendants_of
 
 
-
 class PlanVisit(Document):
+	name_field_map = {
+		"Lead": "first_name",
+		"Prospect": "company_name",
+		"Customer": "customer_name",
+		"Quotation": "title",
+		"Opportunity": "title",
+	}
+	email_field_map = { 
+		"Lead": "email_id",
+		"Prospect": "custom_email", 
+		"Customer": "email_id",
+		"Quotation": "contact_email",
+		"Opportunity": "contact_email",
+	}
+	phone_field_map = {
+		"Lead": "mobile_no",
+		"Prospect": "custom_phone",
+		"Customer": "mobile_no",
+		"Quotation": "contact_mobile",
+		"Opportunity": "phone",
+	}
+	extra_query_fields = {
+		"Customer": ["customer_primary_contact"],
+		"Quotation": ["contact_person", "contact_mobile"],
+		"Opportunity": ["contact_person", "contact_mobile"],
+	}
+
+	def before_save(self):
+		self.allocated_to = frappe.session.user
+
+	def _get_contact_person_details(self, doctype_name, row):
+		contact_person_name = row.get(self.name_field_map.get(doctype_name))
+		contact_person_number = row.get(self.phone_field_map.get(doctype_name))
+
+		contact_link = None
+		if doctype_name == "Customer":
+			contact_link = row.get("customer_primary_contact")
+		elif doctype_name in ("Quotation", "Opportunity"):
+			contact_link = row.get("contact_person")
+			contact_person_number = row.get("contact_mobile") or contact_person_number
+
+		# Fallback: resolve Contact linked to this document through Dynamic Link.
+		if not contact_link and row.get("name"):
+			contact_link = frappe.db.get_value(
+				"Dynamic Link",
+				{
+					"link_doctype": doctype_name,
+					"link_name": row.get("name"),
+					"parenttype": "Contact",
+				},
+				"parent",
+			)
+
+		if contact_link:
+			contact = frappe.db.get_value(
+				"Contact",
+				contact_link,
+				["first_name", "last_name", "mobile_no", "phone"],
+				as_dict=1,
+			)
+			if contact:
+				contact_name = " ".join(filter(None, [contact.first_name, contact.last_name]))
+				contact_person_name = contact_name or contact_person_name
+				contact_person_number = contact.mobile_no or contact.phone or contact_person_number
+
+		return contact_person_name, contact_person_number
+
+	def _append_item(self, doctype_name, row):
+		name_field = self.name_field_map.get(doctype_name)
+		email_field = self.email_field_map.get(doctype_name)
+		phone_field = self.phone_field_map.get(doctype_name)
+		contact_person_name, contact_person_number = self._get_contact_person_details(doctype_name, row)
+
+		self.append(
+			"items",
+			{
+				"doctype_name": doctype_name,
+				"id": row.get("name"),
+				"name1": row.get(name_field),
+				"email": row.get(email_field),
+				"phone": row.get(phone_field),
+				"contact_person_name": contact_person_name,
+				"contact_person_number": contact_person_number,
+			},
+		)
 
 	@frappe.whitelist()
 	def single_record(self):
-		if self.doctype_name == "Lead":
-			lead_doc = frappe.get_doc("Lead", self.id)
-			self.append("items", {
-				"doctype_name": "Lead",
-				"id": lead_doc.name,
-				"name1": lead_doc.first_name,
-				"email": lead_doc.email_id,
-				"phone": lead_doc.mobile_no
-			})
-		if self.doctype_name == "Prospect":
-			prospect_doc = frappe.get_doc("Prospect", self.id)
-			self.append("items", {
-				"doctype_name": "Prospect",
-				"id": prospect_doc.name,
-				"name1": prospect_doc.company_name,
-				"email": prospect_doc.custom_email,
-				"phone": prospect_doc.custom_phone
-			})
-		if self.doctype_name == "Customer":
-			customer_doc = frappe.get_doc("Customer", self.id)
-			self.append("items", {
-				"doctype_name": "Customer",
-				"id": customer_doc.name,
-				"name1": customer_doc.customer_name,
-				"email": customer_doc.email_id,
-				"phone": customer_doc.mobile_no
-			})
-		if self.doctype_name == "Quotation":
-			quotation_doc = frappe.get_doc("Quotation", self.id)
-			self.append("items", {
-				"doctype_name": "Quotation",
-				"id": quotation_doc.name,
-				"name1": quotation_doc.title,
-				"email": quotation_doc.contact_email,
-				"phone": quotation_doc.contact_mobile
-			})
-		if self.doctype_name == "Opportunity":
-			opportunity_doc = frappe.get_doc("Opportunity", self.id)
-			self.append("items", {
-				"doctype_name": "Opportunity",
-				"id": opportunity_doc.name,
-				"name1": opportunity_doc.title,
-				"email": opportunity_doc.contact_email,
-				"phone": opportunity_doc.phone
-			})
+		if not self.doctype_name or not self.id:
+			return
+		if any(row.doctype_name == self.doctype_name and row.id == self.id for row in self.get("items")):
+			return
+
+		source_doc = frappe.get_doc(self.doctype_name, self.id)
+		self._append_item(self.doctype_name, source_doc.as_dict())
 	
 	@frappe.whitelist() 
 	def add_items_child(self):
@@ -78,62 +125,21 @@ class PlanVisit(Document):
 		if self.prospect_customer_group:
 			doc_filter["customer_group"] = self.prospect_customer_group
 			
+		if not self.doctype_name:
+			return
 
+		fields = [
+			"name",
+			self.name_field_map.get(self.doctype_name),
+			self.email_field_map.get(self.doctype_name),
+			self.phone_field_map.get(self.doctype_name),
+		]
+		fields.extend(self.extra_query_fields.get(self.doctype_name, []))
+		fields = list(dict.fromkeys([field for field in fields if field]))
 
-		doc_name = {
-			"Lead": "name",
-			"Prospect": "name",
-			"Customer": "name",
-			"Quotation": "name",
-			"Opportunity": "name"
-		}
-		field_name = {
-			"Lead": "first_name",
-			"Prospect": "company_name",
-			"Customer": "customer_name",
-			"Quotation": "title",
-			"Opportunity": "title"
-		}
-		field_firstname = {
-			"Lead": "first_name",
-			"Prospect": "company_name",
-			"Customer": "customer_name",
-			"Quotation": "party_name",
-			"Opportunity": "party_name"
-		}
-
-		field_email = {
-			"Lead": "email_id",
-			"Prospect": "custom_email",
-			"Customer": "email_id",
-			"Quotation": "contact_email",
-			"Opportunity": "contact_email"
-		}
-
-		field_phone = {
-			"Lead": "mobile_no",
-			"Prospect": "custom_phone",
-			"Customer": "mobile_no",
-			"Quotation": "contact_mobile",
-			"Opportunity": "phone"
-		}
-
-		docname = doc_name.get(self.doctype_name) 
-		fieldname = field_name.get(self.doctype_name) 
-		firstname = field_firstname.get(self.doctype_name) 
-		fieldemail = field_email.get(self.doctype_name) 
-		fieldphone = field_phone.get(self.doctype_name) 
-		# frappe.throw(str(doc_filter))
-
-		data = frappe.get_all(self.doctype_name, filters=doc_filter, fields=[docname,firstname, fieldemail, fieldphone])
+		data = frappe.get_all(self.doctype_name, filters=doc_filter, fields=fields)
 		for row in data:
-			self.append("items", {
-				"doctype_name": self.doctype_name,
-				"id": row.get(docname),
-				"name1": row.get(firstname),
-				"email": row.get(fieldemail),  
-				"phone": row.get(fieldphone)
-			})
+			self._append_item(self.doctype_name, row)
 		# frappe.throw(str(data))
 	
 
@@ -175,13 +181,12 @@ class PlanVisit(Document):
 			new_doc.id= row.id	
 			new_doc.phone= row.phone
 			new_doc.email= row.email
+			new_doc.contact_person_name= row.contact_person_name
+			new_doc.contact_person_number= row.contact_person_number
 
 			new_doc.save()
 			self.load_from_db()
 
-
-from frappe.utils import now_datetime, get_datetime
-import frappe
 
 @frappe.whitelist()
 def recurring_plan():
@@ -234,6 +239,8 @@ def create_field_visit(pv_id):
 		new_doc.id= row.id	
 		new_doc.phone= row.phone
 		new_doc.email= row.email
+		new_doc.contact_person_name= row.contact_person_name
+		new_doc.contact_person_number= row.contact_person_number
 		new_doc.save()
 
 # @frappe.whitelist()
@@ -248,7 +255,7 @@ def create_field_visit(pv_id):
 # 			"id": row.id,
 # 			"name1": row.name1,
 # 			"phone": row.phone,
-# 			"email": row.email
+# 			"email": row.email 
 # 		})
 
 # 	new_doc.save()

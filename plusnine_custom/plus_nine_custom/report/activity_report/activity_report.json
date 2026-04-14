@@ -6,11 +6,11 @@
  "docstatus": 0,
  "doctype": "Report",
  "filters": [],
- "idx": 0,
+ "idx": 12,
  "is_standard": "Yes",
  "letter_head": "e",
  "letterhead": null,
- "modified": "2025-06-24 12:25:30.434991",
+ "modified": "2026-02-02 15:51:20.485062",
  "modified_by": "Administrator",
  "module": "Plus Nine Custom",
  "name": "Activity Report",
@@ -21,16 +21,13 @@
  "report_type": "Script Report",
  "roles": [
   {
-   "role": "Sales Manager"
-  },
-  {
    "role": "System Manager"
   },
   {
-   "role": "Sales User"
+   "role": "personal workspace"
   },
   {
-   "role": "personal workspace"
+   "role": "Sales Manager"
   }
  ],
  "timeout": 0

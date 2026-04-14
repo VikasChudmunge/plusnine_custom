@@ -126,11 +126,11 @@
    "label": "Posting Date"
   },
   {
+   "depends_on": "eval:frappe.user_roles.includes(\"Sales Manager\")\n",
    "fieldname": "allocated_to",
    "fieldtype": "Link",
    "label": "Allocated To",
-   "options": "User",
-   "reqd": 1
+   "options": "User"
   },
   {
    "fieldname": "id",
@@ -147,7 +147,7 @@
    "link_fieldname": "plan_visit_id"
   }
  ],
- "modified": "2025-12-06 13:53:17.396340",
+ "modified": "2026-02-02 12:05:25.550016",
  "modified_by": "Administrator",
  "module": "Plus Nine Custom",
  "name": "Plan Visit",

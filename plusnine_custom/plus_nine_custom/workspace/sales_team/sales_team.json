@@ -1,0 +1,140 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"GnTKi8V08r\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Sales Teams</span>\",\"col\":12}},{\"id\":\"6bgAZ3-SSS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Lead\",\"col\":3}},{\"id\":\"btGvwAOs4z\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Prospect\",\"col\":3}},{\"id\":\"41U3mE3Bz9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Opportunity\",\"col\":3}},{\"id\":\"k1fXzC1xI5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customers\",\"col\":3}},{\"id\":\"VSX6WgneN7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Plan Visit\",\"col\":3}},{\"id\":\"R2asdUBorT\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Field Visit List\",\"col\":3}},{\"id\":\"omxTeLOjyG\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quotations\",\"col\":3}},{\"id\":\"4dieD2WH8u\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Order\",\"col\":3}},{\"id\":\"p8fgfEeOQ3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Todo Task\",\"col\":3}},{\"id\":\"28rZfRiQba\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Task\",\"col\":3}},{\"id\":\"e23WGw2Bo7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Expense Claim\",\"col\":3}},{\"id\":\"NFu0lYs8nc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Application\",\"col\":3}},{\"id\":\"cZckzxlOaq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Quick Stock & Price Lookup\",\"col\":3}}]",
+ "creation": "2026-01-31 11:30:46.068143",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "share-people",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Sales Team",
+ "links": [],
+ "modified": "2026-02-27 12:35:41.089400",
+ "modified_by": "Administrator",
+ "module": "Plus Nine Custom",
+ "name": "Sales Team",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Sales User for vishal"
+  }
+ ],
+ "sequence_id": 39.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Lead",
+   "link_to": "Lead",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Expense Claim",
+   "link_to": "Expense Claim",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Quick Stock & Price Lookup",
+   "link_to": "Quick Price Lookup",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Leave Application",
+   "link_to": "Leave Application",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Prospect",
+   "link_to": "Prospect",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Opportunity",
+   "link_to": "Opportunity",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Customers",
+   "link_to": "Customer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Field Plan Visit",
+   "link_to": "Plan Visit",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Field Visit List",
+   "link_to": "Field Visits",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Quotations",
+   "link_to": "Quotation",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Sales Order",
+   "link_to": "Sales Order",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Todo Task",
+   "link_to": "ToDo",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Task",
+   "link_to": "Task",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Sales Team"
+}
