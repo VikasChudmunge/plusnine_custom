@@ -208,7 +208,10 @@ doc_events = {
     },
      "Event": {
         "before_insert": "plusnine_custom.public.py.event.set_event_public"
-    }
+    },
+    "Purchase Order": {
+        "before_save": "plusnine_custom.public.py.purchase_order.create_multiple_batch"
+    },
    
     # "Sales Order": {
     #       "on_submit": "plusnine_custom.public.py.sales_order.create_and_attach_pdf"
