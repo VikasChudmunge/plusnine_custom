@@ -1,3 +1,36 @@
+(() => {
+    if (
+        typeof erpnext === "undefined" ||
+        !erpnext.stock?.DeliveryNoteController
+    ) {
+        return;
+    }
+
+    const parent_setup = Object.getPrototypeOf(erpnext.stock.DeliveryNoteController.prototype)?.setup;
+
+    erpnext.stock.DeliveryNoteController.prototype.setup = function(doc) {
+        if (typeof parent_setup === "function") {
+            parent_setup.call(this, doc);
+        }
+
+        if (typeof this.setup_accounting_dimension_triggers === "function") {
+            this.setup_accounting_dimension_triggers();
+        }
+
+        if (typeof this.setup_posting_date_time_check === "function") {
+            this.setup_posting_date_time_check();
+        }
+
+        this.frm.make_methods = {
+            "Delivery Trip": this.make_delivery_trip,
+        };
+    };
+
+    if (typeof cur_frm !== "undefined" && cur_frm?.cscript) {
+        cur_frm.cscript.setup = erpnext.stock.DeliveryNoteController.prototype.setup;
+    }
+})();
+
 frappe.ui.form.on('Delivery Note', {
     refresh: function (frm) {
         if (frm.doc.customer) {
@@ -212,6 +245,19 @@ frappe.ui.form.on('Delivery Note', {
                 }
             }
         });
+    }
+});
+
+frappe.ui.form.on('Custom Bundle Item', {
+    item_code(frm, cdt, cdn) {
+        if (!frm.fields_dict.custom_items_bundle) {
+            return;
+        }
+
+        frm.fields_dict.custom_items_bundle.grid.get_field('batch').get_query = function(doc, cdt, cdn) {
+            const row = locals[cdt][cdn];
+            return { filters: { item: row.item_code } };
+        };
     }
 });
 

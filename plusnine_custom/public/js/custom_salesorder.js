@@ -1,3 +1,28 @@
+(() => {
+    if (
+        typeof erpnext === "undefined" ||
+        !erpnext.selling?.SalesOrderController
+    ) {
+        return;
+    }
+
+    const parent_setup = Object.getPrototypeOf(erpnext.selling.SalesOrderController.prototype)?.setup;
+
+    erpnext.selling.SalesOrderController.prototype.setup = function(doc) {
+        if (typeof parent_setup === "function") {
+            parent_setup.call(this, doc);
+        }
+
+        if (typeof this.setup_accounting_dimension_triggers === "function") {
+            this.setup_accounting_dimension_triggers();
+        }
+    };
+
+    if (typeof cur_frm !== "undefined" && cur_frm?.cscript) {
+        cur_frm.cscript.setup = erpnext.selling.SalesOrderController.prototype.setup;
+    }
+})();
+
 frappe.ui.form.on('Sales Order', {
     custom_vehicle_details: async function(frm) {
         if (frm.doc.custom_vehicle_details) {
@@ -212,4 +237,3 @@ function set_custom_bundle_batch_query(frm, cdt, cdn) {
         };
     };
 }
-

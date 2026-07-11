@@ -37,11 +37,7 @@ frappe.ui.form.on("Job Cards", {
             }).addClass('btn-success');
         }
         frm.add_custom_button(__('Make Payment'), function () {
-            frappe.model.with_doctype('Payment Entry', function () {
-                let pay_doc = frappe.model.get_new_doc('Payment Entry');
-                pay_doc.custom_job_cards = frm.doc.name;
-                frappe.set_route('Form', 'Payment Entry', pay_doc.name);
-            });
+            make_payment_entry_from_job_card(frm);
         },);
 	},
     // after_save: function(frm) {
@@ -77,5 +73,58 @@ frappe.ui.form.on("Job Cards", {
     // }
 });
 
+function set_job_card_reference(pay_doc, job_card) {
+    pay_doc.custom_job_cards = job_card.name;
+    const job_card_note = `Job Card: ${job_card.name}`;
+    pay_doc.remarks = pay_doc.remarks ? `${pay_doc.remarks}\n${job_card_note}` : job_card_note;
+}
 
+function route_to_payment_entry(pay_doc) {
+    frappe.model.sync(pay_doc);
+    frappe.set_route('Form', 'Payment Entry', pay_doc.name);
+}
+
+function make_basic_payment_entry_from_job_card(frm) {
+    frappe.model.with_doctype('Payment Entry', function () {
+        let pay_doc = frappe.model.get_new_doc('Payment Entry');
+        pay_doc.payment_type = 'Receive';
+        pay_doc.party_type = 'Customer';
+        pay_doc.party = frm.doc.customer;
+        pay_doc.party_name = frm.doc.customer_name;
+        pay_doc.posting_date = frappe.datetime.get_today();
+
+        set_job_card_reference(pay_doc, frm.doc);
+        frappe.model.set_value(pay_doc.doctype, pay_doc.name, 'party', frm.doc.customer);
+        route_to_payment_entry(pay_doc);
+    });
+}
+
+function make_payment_entry_from_job_card(frm) {
+    if (!frm.doc.customer) {
+        frappe.throw(__('Customer is required to make Payment Entry.'));
+    }
+
+    if (frm.doc.document_type === 'Sales Order' && frm.doc.document_id) {
+        frappe.call({
+            method: 'erpnext.accounts.doctype.payment_entry.payment_entry.get_payment_entry',
+            args: {
+                dt: frm.doc.document_type,
+                dn: frm.doc.document_id
+            },
+            callback: function(r) {
+                if (!r.message) {
+                    make_basic_payment_entry_from_job_card(frm);
+                    return;
+                }
+
+                const pay_doc = r.message;
+                set_job_card_reference(pay_doc, frm.doc);
+                route_to_payment_entry(pay_doc);
+            }
+        });
+        return;
+    }
+
+    make_basic_payment_entry_from_job_card(frm);
+}
 

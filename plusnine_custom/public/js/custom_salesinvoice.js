@@ -1,3 +1,37 @@
+(() => {
+    if (
+        typeof erpnext === "undefined" ||
+        !erpnext.accounts?.SalesInvoiceController
+    ) {
+        return;
+    }
+
+    const parent_setup = Object.getPrototypeOf(erpnext.accounts.SalesInvoiceController.prototype)?.setup;
+
+    erpnext.accounts.SalesInvoiceController.prototype.setup = function(doc) {
+        if (typeof parent_setup === "function") {
+            parent_setup.call(this, doc);
+        }
+
+        if (typeof this.setup_accounting_dimension_triggers === "function") {
+            this.setup_accounting_dimension_triggers();
+        }
+
+        if (typeof this.setup_posting_date_time_check === "function") {
+            this.setup_posting_date_time_check();
+        }
+
+        this.frm.make_methods = {
+            Dunning: this.make_dunning.bind(this),
+            "Invoice Discounting": this.make_invoice_discounting.bind(this),
+        };
+    };
+
+    if (typeof cur_frm !== "undefined" && cur_frm?.cscript) {
+        cur_frm.cscript.setup = erpnext.accounts.SalesInvoiceController.prototype.setup;
+    }
+})();
+
 frappe.ui.form.on('Sales Invoice', {
     // after_save: function(frm) {
     //     if (frm.doc.custom_customer_vehicle_no) {

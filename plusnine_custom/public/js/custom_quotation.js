@@ -39,7 +39,7 @@ frappe.ui.form.on('Quotation', {
             });
         }, 100);
     },
-    refresh: async function(frm) {
+    party_name: async function(frm) {
         if (frm.doc.party_name) {
             frm.set_query('custom_vehicle_details', function() {
                 return {
